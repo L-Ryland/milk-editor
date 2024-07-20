@@ -1,4 +1,5 @@
 @import './base.css';
+@import './milkdown.css';
 
 body {
   display: flex;
@@ -14,7 +15,6 @@ code {
   font-weight: 600;
   padding: 3px 5px;
   border-radius: 2px;
-  background-color: var(--color-background-mute);
   font-family:
     ui-monospace,
     SFMono-Regular,
@@ -105,21 +105,17 @@ code {
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
-  border: 1px solid transparent;
   text-align: center;
   font-weight: 600;
   white-space: nowrap;
-  border-radius: 20px;
   padding: 0 20px;
   line-height: 38px;
   font-size: 14px;
-  border-color: var(--ev-button-alt-border);
   color: var(--ev-button-alt-text);
   background-color: var(--ev-button-alt-bg);
 }
 
 .action a:hover {
-  border-color: var(--ev-button-alt-hover-border);
   color: var(--ev-button-alt-hover-text);
   background-color: var(--ev-button-alt-hover-bg);
 }
@@ -133,7 +129,6 @@ code {
   display: inline-flex;
   overflow: hidden;
   align-items: center;
-  border-radius: 22px;
   background-color: #202127;
   backdrop-filter: blur(24px);
 }
@@ -141,14 +136,10 @@ code {
 .versions li {
   display: block;
   float: left;
-  border-right: 1px solid var(--ev-c-gray-1);
   padding: 0 20px;
   font-size: 14px;
   line-height: 14px;
   opacity: 0.8;
-  &:last-child {
-    border: none;
-  }
 }
 
 @media (max-width: 720px) {

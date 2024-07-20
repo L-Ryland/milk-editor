@@ -1,6 +1,12 @@
 import './assets/main.css'
+import 'virtual:uno.css'
+import 'uno.css'
+import 'virtual:unocss-devtools'
+import "@milkdown/theme-nord/style.css"
 
 import { createApp } from 'vue'
+import { createPinia } from "pinia"
 import App from './App.vue'
 
-createApp(App).mount('#app')
+const pinia = createPinia()
+createApp(App).use(pinia).mount('#app')

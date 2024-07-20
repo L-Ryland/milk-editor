@@ -1,26 +1,50 @@
 <script setup lang="ts">
-import Versions from './components/Versions.vue'
+import { MilkdownProvider } from "@milkdown/vue"
+import { MilkdownEditor, DragListener } from "@renderer/components"
+import { useEditorStore, useFilesStore } from "./stores";
+import { onUnmounted, ref } from "vue";
+import { useIpcRendererOn, useIpcRenderer, useIpcRendererInvoke } from "@vueuse/electron";
+import { useEventListener } from "@vueuse/core";
 
 const ipcHandle = () => window.electron.ipcRenderer.send('ping')
+const editorStore = useEditorStore();
+const filesStore = useFilesStore()
+const markdownContent = ref<string>()
+editorStore.$subscribe((mutation, state) => {
+  markdownContent.value = editorStore.editorContent;
+})
+// @ts-ignore
+useIpcRendererOn(window.electron.ipcRenderer, 'call:fileSave', (event) => {
+  console.log("receive onSaveFileCall")
+  if (!filesStore.isDirectory && filesStore.tempFiles.length === 0) {
+    window.api.saveTempFile({
+      name: "untitled.md",
+      text: markdownContent.value
+    })
+  }
+  if (filesStore.activeFile) {
+    const activeFile = filesStore.activeFile;
+    debugger
+    window.api.saveFile({
+      ...activeFile,
+      text: markdownContent.value
+    })
+  }
+})
+
+onUnmounted(() => {
+  filesStore.$reset();
+})
+
+
+
 </script>
 
 <template>
-  <img alt="logo" class="logo" src="./assets/electron.svg" />
-  <div class="creator">Powered by electron-vite</div>
-  <div class="text">
-    Build an Electron app with
-    <span class="vue">Vue</span>
-    and
-    <span class="ts">TypeScript</span>
-  </div>
-  <p class="tip">Please try pressing <code>F12</code> to open the devTool</p>
-  <div class="actions">
-    <div class="action">
-      <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">Documentation</a>
-    </div>
-    <div class="action">
-      <a target="_blank" rel="noreferrer" @click="ipcHandle">Send IPC</a>
-    </div>
-  </div>
-  <Versions />
+  <div text="red-500" @click="ipcHandle">aa</div>
+  <drag-listener>
+    <milkdown-provider>
+      <milkdown-editor v-model="markdownContent" />
+    </milkdown-provider>
+  </drag-listener>
 </template>
