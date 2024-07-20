@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { Milkdown, useEditor } from '@milkdown/vue';
-import { defaultValueCtx } from '@milkdown/core';
-import { useEditorStore } from '@renderer/stores';
-import { ref, shallowRef, watch } from 'vue';
+import { useEditorStore, useFilesStore } from '@renderer/stores';
+import { shallowRef, watch } from 'vue';
 import EditorConfig from '@renderer/utils/editorConfig';
 
 interface Props {
@@ -16,10 +15,11 @@ const markdown =
 
 This is a demo for using Milkdown with **Vue**.`
 const model = defineModel({ default: markdown })
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   content: markdown
 })
 const editorStore = useEditorStore();
+const filesStore = useFilesStore();
 
 const editor = shallowRef<EditorConfig>()
 useEditor(root => {
@@ -45,8 +45,10 @@ useEditor(root => {
 //     .use(commonmark)
 // })
 
-watch(model, async () => {
-  editor.value?.updateContent(model.value)
+watch(() => filesStore.activeFile, () => {
+  const content = editorStore.editorContent
+  model.value = content;
+  editor.value?.updateContent(content)
 })
 
 

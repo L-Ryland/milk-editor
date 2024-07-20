@@ -2,6 +2,12 @@ import { app, type BrowserWindow, type MenuItemConstructorOptions } from "electr
 
 export const menuTemplate: (mainWindow: BrowserWindow) => MenuItemConstructorOptions[] = (mainWindow) => [
   {
+    label: "App", submenu: [
+      { type: 'separator' },
+      { label: 'Exit', click() { console.log('Exit app');; app.quit(); }, accelerator: 'CmdOrCtrl+Q' },
+    ]
+  },
+  {
     label: 'File',
     submenu: [
       { label: 'New', click() { console.log('New File'); }, accelerator: 'CmdOrCtrl+N' },
@@ -12,8 +18,6 @@ export const menuTemplate: (mainWindow: BrowserWindow) => MenuItemConstructorOpt
           console.log('Save File');
         }, accelerator: 'CmdOrCtrl+S'
       },
-      { type: 'separator' },
-      { label: 'Exit', click() { console.log('Exit app');; app.quit(); }, accelerator: 'CmdOrCtrl+Q' },
     ],
   },
   {
@@ -22,7 +26,7 @@ export const menuTemplate: (mainWindow: BrowserWindow) => MenuItemConstructorOpt
       { label: 'Undo', role: 'undo' },
       { label: 'Redo', role: 'redo' },
       { type: 'separator' },
-      { label: 'Cut', role: 'cut' },
+      { label: 'Cut', role: 'cut', },
       { label: 'Copy', role: 'copy' },
       { label: 'Paste', role: 'paste' },
     ],

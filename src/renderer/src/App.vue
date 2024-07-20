@@ -1,18 +1,13 @@
 <script setup lang="ts">
 import { MilkdownProvider } from "@milkdown/vue"
-import { MilkdownEditor, DragListener } from "@renderer/components"
+import { MilkdownEditor, DragListener, Layout, Banner } from "@renderer/components"
 import { useEditorStore, useFilesStore } from "./stores";
 import { onUnmounted, ref } from "vue";
-import { useIpcRendererOn, useIpcRenderer, useIpcRendererInvoke } from "@vueuse/electron";
-import { useEventListener } from "@vueuse/core";
+import { useIpcRendererOn } from "@vueuse/electron";
 
-const ipcHandle = () => window.electron.ipcRenderer.send('ping')
 const editorStore = useEditorStore();
 const filesStore = useFilesStore()
 const markdownContent = ref<string>()
-editorStore.$subscribe((mutation, state) => {
-  markdownContent.value = editorStore.editorContent;
-})
 // @ts-ignore
 useIpcRendererOn(window.electron.ipcRenderer, 'call:fileSave', (event) => {
   console.log("receive onSaveFileCall")
@@ -24,7 +19,6 @@ useIpcRendererOn(window.electron.ipcRenderer, 'call:fileSave', (event) => {
   }
   if (filesStore.activeFile) {
     const activeFile = filesStore.activeFile;
-    debugger
     window.api.saveFile({
       ...activeFile,
       text: markdownContent.value
@@ -41,10 +35,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div text="red-500" @click="ipcHandle">aa</div>
-  <drag-listener>
-    <milkdown-provider>
-      <milkdown-editor v-model="markdownContent" />
-    </milkdown-provider>
-  </drag-listener>
+  <layout>
+      <banner #banner></banner>
+    <drag-listener>
+      <milkdown-provider>
+        <milkdown-editor v-model="markdownContent" />
+      </milkdown-provider>
+    </drag-listener>
+  </layout>
 </template>

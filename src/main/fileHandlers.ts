@@ -3,7 +3,7 @@ import type { PathLike } from "fs";
 import { readFile, writeFile } from "fs/promises";
 
 
-export const handleIpcMain = () => {
+export const handleFileActions = () => {
   ipcMain.handle('file:open', openFile);
   ipcMain.handle("file:save", saveFile);
   ipcMain.handle("file:savetemp", saveTempFile);

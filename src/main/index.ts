@@ -3,12 +3,15 @@ import os from "os";
 import { join } from 'path';
 import { electronApp, optimizer, is, platform } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
-import { handleIpcMain, saveTempFile } from './fileHandlers';
+import { handleFileActions } from './fileHandlers';
 import { menuTemplate } from './menu';
+import AppHandler from './appHandlers';
 
-function createWindow(): void {
+let mainWindow: BrowserWindow;
+function createWindow() {
+  ;
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
@@ -17,7 +20,9 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
-    }
+    },
+    title: "Hello World",
+    frame: false,
   });
 
   mainWindow.on('ready-to-show', () => {
@@ -31,6 +36,7 @@ function createWindow(): void {
 
   const menu = Menu.buildFromTemplate(menuTemplate(mainWindow));
   Menu.setApplicationMenu(menu);
+
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
@@ -61,9 +67,15 @@ app.whenReady().then(() => {
   });
   // ipcMain.handle("file:savetemp", saveTempFile);
 
-  handleIpcMain();
+  handleFileActions();
 
   createWindow();
+  new AppHandler(mainWindow).init();
+
+  if (is.dev) {
+    mainWindow.webContents.openDevTools();
+  }
+  app.setName("Hello");
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

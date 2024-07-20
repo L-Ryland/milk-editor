@@ -5,7 +5,6 @@ const filesStore = useFilesStore();
 const editorStore = useEditorStore();
 const handleReceiveDroppedFile = async (e: DragEvent) => {
   const [file] = e.dataTransfer?.files ?? [];
-  debugger
   if (!file.type) {
     return filesStore.setIsDirectory(true);
   }
@@ -21,13 +20,14 @@ const handleReceiveDroppedFile = async (e: DragEvent) => {
     filesStore.addFile(activeFile);
     const data = await window.api.openFile(activeFile)
     editorStore.setEditorContent(data);
+    window.api.setAppTitle(file.name)
   }
 }
 
 </script>
 
 <template>
-  <div w-screen h-screen absolute draggable @dragover.prevent="" @drop.prevent="handleReceiveDroppedFile">
+  <div w-full h-full draggable @dragover.prevent="" @drop.prevent="handleReceiveDroppedFile">
     <slot></slot>
   </div>
 </template>

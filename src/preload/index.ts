@@ -24,6 +24,9 @@ export const api = {
   saveTempFile(file: FilePayload) {
     return ipcRenderer.invoke("file:savetemp", file);
   },
+  setAppTitle(title: string) {
+    return ipcRenderer.send("set#app-title", title);
+  }
 };
 
 ipcRenderer.prependListener;
